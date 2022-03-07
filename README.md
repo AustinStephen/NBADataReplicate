@@ -19,7 +19,7 @@ To replicate:
 This can easily be extended to future seasons by creating a new script via the same naming
 conventions and changing the dates.
 
-2) run **manipulate.R** to aggregate the data and create the feature columns. 
+2) Run **manipulate.R** to aggregate the data and create the feature columns. 
 The function aggregate() contains the feature construction code and can be modified to add new features.
 
 ## Column Specification
