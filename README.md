@@ -15,11 +15,11 @@ more recent games the scripts directory contains the Rscripts used to scrape the
 
 To replicate:
 
-1) Aggregate each season and write the results by running the scripts titled data_make_team_*.R .
+1) Aggregate each season and write the results to a csv file by running the scripts titled **data_make_team_*.R** .
 This can easily be extended to future seasons by creating a new script via the same naming
 conventions and changing the dates.
 
-2) run manipulate.R to aggregate the data and create the feature columns. 
+2) run **manipulate.R** to aggregate the data and create the feature columns. 
 The function aggregate() contains the feature construction code and can be modified to add new features.
 
 ## Column Specification
