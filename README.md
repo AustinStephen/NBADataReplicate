@@ -1,25 +1,26 @@
 # NBADataReplicate
 Author: Austin Stephen  
-
-Date: 3/6/2022
+Date: 3/6/2022  
+Contact: astepehn@uwyo.edu
 
 ## Purpose 
-Hosts the data and scripts used to aggregate data used in the MLR3 gallery post "Modeling NBA Game Outcome".
+The csv files and scripts that aggregate the data used in the mlr3 gallery post "Modeling NBA Game Outcome" and 
+"AutoML System to Predict the Outcome of an NBA Game".
 
 ## Instructions
 To access the data simply read the csv files into your R enviornment.
 
-To those interested in adding new feature columns, or adding more recent games the 
-scripts directory contains the code used to scrape the data from nba.com curtosey 
-of the nbaR and nbaStatR packages.
+For those interested in examing the scripts used to collect the data to add new features or 
+more recent games the scripts directory contains the Rscripts used to scrape the data.
 
-To replicate
+To replicate:
 
-1) Aggregate each season and write the results by running the scripts titled data_make_team_*.R
+1) Aggregate each season and write the results by running the scripts titled data_make_team_*.R .
+This can easily be extended to future seasons by creating a new script via the same naming
+conventions and changing the dates.
 
-This can easily be extended to future season by creating a new script and changing the dates.
-
-2) run manipulate.R to aggregate the data and create the feature columns.
+2) run manipulate.R to aggregate the data and create the feature columns. 
+The function aggregate() contains the feature construction code and can be modified to add new features.
 
 ## Column Specification
 
