@@ -22,6 +22,8 @@ conventions and changing the dates.
 2) run manipulate.R to aggregate the data and create the feature columns. 
 The function aggregate() contains the feature construction code and can be modified to add new features.
 
+Note: The scripts rely on the package NBAstatR which can be installed with *devtools::install_github("abresler/nbastatR")*
+
 ## Column Specification
 
 *_id: Unique identifier for what is replacd by the star.
