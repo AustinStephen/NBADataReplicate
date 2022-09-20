@@ -8,9 +8,8 @@ library(nbastatR)
 # vectorized function that computes cumulative average less the observation 
 
 running_total <- function(vector){
-  (cumsum(vector) - vector)/ (row_number()-1) 
+  (cumsum(vector) - vector) / length(vector)#n()#(row_number(vector) -1)
 }
-
 
 # marco_joins() -----------------------------------------------------------
 # Joins with game outcome and team information
@@ -34,7 +33,7 @@ macro_joins <- function(data,year)
 # takes a dataframe with the exact structure given by the web scraper and
 # returns the aggregated version of that dataframe.
 
-aggregatePlayer <- function(dataframe){
+aggregate_player <- function(dataframe){
   
   dataframe %>% 
     group_by(player_id) %>%
@@ -103,6 +102,7 @@ game_logs(
     select(idGame,idTeam,plusminusTeam,ptsTeam,pctFG3Team,
            pctFG2Team, astTeam, stlTeam, blkTeam, tovTeam, pfTeam, orebTeam,
            drebTeam, ftmTeam, isB2BSecond, locationGame, countDaysRestTeam) %>%
+    group_by(idTeam)%>%
     transmute(
       ## Identity mapping
       game_id = idGame,

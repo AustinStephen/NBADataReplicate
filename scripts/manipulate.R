@@ -11,7 +11,9 @@
 #             only comes on a per game basis, not very useful for predicting the
 #             outcome of that game.
 
+# get functions macro_joins(), aggregate_player(),aggregate_team()
 source("scripts/functions.R")
+
 
 # Single Seasons of Player Summaries ----------------------------------------
 p14 <- read.csv("data/2014_by_player.csv")
@@ -34,17 +36,17 @@ p18 <- macro_joins(p18,2018)
 p19 <- macro_joins(p19,2019)
 
 ## aggregating season stats for each year
-mod_p14 <- aggregatePlayer(p14)
+mod_p14 <- aggregate_player(p14)
 
-mod_p15 <- aggregatePlayer(p15)
+mod_p15 <- aggregate_player(p15)
 
-mod_p16 <- aggregatePlayer(p16)
+mod_p16 <- aggregate_player(p16)
 
-mod_p17 <- aggregatePlayer(p17)
+mod_p17 <- aggregate_player(p17)
 
-mod_p18 <- aggregatePlayer(p18)
+mod_p18 <- aggregate_player(p18)
 
-mod_p19 <- aggregatePlayer(p19)
+mod_p19 <- aggregate_player(p19)
 
 
 full_data_by_player <- rbind(mod_p14,mod_p15,mod_p16,mod_p17,mod_p18,mod_p19)
@@ -73,4 +75,3 @@ mod_p19 <- aggregateTeam(2019)
 full_data_by_team <- rbind(mod_p14,mod_p15,mod_p16,mod_p17,mod_p18,mod_p19)
 
 write.csv(full_data_by_team,"data/full_data_by_team.csv",row.names = FALSE)
-  
