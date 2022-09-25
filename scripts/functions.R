@@ -8,8 +8,10 @@ library(nbastatR)
 # vectorized function that computes cumulative average less the observation 
 
 running_total <- function(vector){
-  (cumsum(vector) - vector) / length(vector)#n()#(row_number(vector) -1)
+  (cumsum(vector) - vector)
 }
+
+
 
 # marco_joins() -----------------------------------------------------------
 # Joins with game outcome and team information
@@ -107,24 +109,39 @@ game_logs(
       ## Identity mapping
       game_id = idGame,
       team_id = idTeam,
+      # Other
+      game = row_number(),
       ## Team stats
-      agg_plusminusTeam = running_total(plusminusTeam),
-      agg_ptsTeam = running_total(ptsTeam),
-      agg_pctFG3Team = running_total(pctFG3Team),
-      agg_pctFG2Team = running_total(pctFG2Team),
-      agg_astTeam = running_total(astTeam),
-      agg_stlTeam = running_total(stlTeam),
-      agg_blkTeam = running_total(blkTeam),
-      agg_tovTeam = running_total(tovTeam),
-      agg_pfTeam = running_total(pfTeam),
-      agg_orebTeam = running_total(orebTeam),
-      agg_drebTeam = running_total(drebTeam),
-      agg_ftmTeam = running_total(ftmTeam),
-      agg_daysRestTeam = running_total(countDaysRestTeam),
+      agg_plusminusTeam = running_total(plusminusTeam)/game, # /game scales the sum
+      agg_ptsTeam = running_total(ptsTeam)/game,
+      agg_pctFG3Team = running_total(pctFG3Team)/game,
+      agg_pctFG2Team = running_total(pctFG2Team)/game,
+      agg_astTeam = running_total(astTeam)/game,
+      agg_stlTeam = running_total(stlTeam)/game,
+      agg_blkTeam = running_total(blkTeam)/game,
+      agg_tovTeam = running_total(tovTeam)/game,
+      agg_pfTeam = running_total(pfTeam)/game,
+      agg_orebTeam = running_total(orebTeam)/game,
+      agg_drebTeam = running_total(drebTeam)/game,
+      agg_ftmTeam = running_total(ftmTeam)/game,
       ## not aggregated
+      daysRest = countDaysRestTeam,
       B2BTeam = isB2BSecond,
       locationGame = locationGame,
-      plusminusTeam = plusminusTeam
+      plusminusTeam = plusminusTeam,
+      # Segment of season 
+      segSeason = case_when(
+        game < 20 ~ 1,
+        game < 40 ~ 2,
+        game < 60 ~ 3,
+        TRUE ~ 4
+      ),
+      # count wins
+      win = case_when(plusminusTeam > 0 ~ 1,
+                      plusminusTeam <= 0  ~ 0 ),
+      # compute prior win ratio
+      WL_ratio = case_when( game > 1 ~ (cumsum(win)-win) / game,
+                              TRUE ~ 0)
     ) %>%
     filter(!is.na(agg_plusminusTeam))
 }
