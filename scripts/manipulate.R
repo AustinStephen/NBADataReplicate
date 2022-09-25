@@ -73,8 +73,6 @@ mod_p19 <- aggregateTeam(2019)
 
 full_data_by_team <- rbind(mod_p14,mod_p15,mod_p16,mod_p17,mod_p18,mod_p19)
 
-
-
 # Transform with respect to one game
 full_data_by_team <- ungroup(full_data_by_team)
 team_home <- full_data_by_team %>% filter(locationGame == 'H' )
@@ -84,12 +82,12 @@ full_data_by_team <- merge(x = team_home,
               y = team_away,
               by.x = "game_id",
               by.y = "opp_game_id") %>%
-  select(-c(opp_team_id,)) %>%
   # combine  information that makes more sense together
   mutate(WL_diff = WL_ratio - opp_WL_ratio,
          rest_diff = daysRest - opp_daysRest)%>%
+  # drop redundant columns
   select(-c(WL_ratio, opp_WL_ratio, daysRest, opp_daysRest, opp_segSeason,
-            opp_locationGame))
+            opp_locationGame, opp_win, opp_game, opp_plusminusTeam, opp_team_id))
   
 
-write.csv(full_data_by_team,"data/full_data_by_team.csv",row.names = FALSE)
+write.csv(full_data_by_team,"data/full_data_by_team.csv", row.names = FALSE)
