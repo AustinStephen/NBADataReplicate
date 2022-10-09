@@ -87,7 +87,8 @@ full_data_by_team <- merge(x = team_home,
          rest_diff = daysRest - opp_daysRest)%>%
   # drop redundant columns
   select(-c(WL_ratio, opp_WL_ratio, daysRest, opp_daysRest, opp_segSeason,
-            opp_locationGame, opp_win, opp_game, opp_plusminusTeam, opp_team_id))
+            opp_locationGame, opp_win, opp_game, opp_plusminusTeam, opp_team_id,
+            locationGame))
   
 
 write.csv(full_data_by_team,"data/full_data_by_team.csv", row.names = FALSE)
