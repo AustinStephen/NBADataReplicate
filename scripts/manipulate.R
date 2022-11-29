@@ -73,6 +73,23 @@ mod_p19 <- aggregateTeam(2019)
 
 full_data_by_team <- rbind(mod_p14,mod_p15,mod_p16,mod_p17,mod_p18,mod_p19)
 
+# create a table of the prior seasons wins 
+priorWins <- full_data_by_team %>% 
+  select(team_id, Season, finalWins) %>%
+  distinct(team_id, Season, finalWins) %>%
+  mutate(Season = case_when(
+            # 2018 does not map to another season so it is used as a placeholder wrap around for
+            # the 2013 season
+            Season == 2018 ~ 2013,
+            TRUE ~ Season + 1,
+            ),
+         finalWins = case_when(
+           # map 2013 to the average wins since 2012 data is not collected
+           Season == 2013 ~ 35,
+           TRUE ~ finalWins)
+         ) %>%
+  rename(priorSeasonWins = finalWins)
+
 # Transform with respect to one game
 full_data_by_team <- ungroup(full_data_by_team)
 team_home <- full_data_by_team %>% filter(locationGame == 'H' )
@@ -84,11 +101,13 @@ full_data_by_team <- merge(x = team_home,
               by.y = "opp_game_id") %>%
   # combine  information that makes more sense together
   mutate(WL_diff = WL_ratio - opp_WL_ratio,
-         rest_diff = daysRest - opp_daysRest)%>%
-  # drop redundant columns
+         rest_diff = daysRest - opp_daysRest,
+         wins_diff = winsSeason - opp_winsSeason)%>%
   select(-c(WL_ratio, opp_WL_ratio, daysRest, opp_daysRest, opp_segSeason,
             opp_locationGame, opp_win, opp_game, opp_plusminusTeam, opp_team_id,
-            locationGame))
-  
+            locationGame, finalWins))%>%
+  merge(priorWins, 
+        by = c("Season", "team_id"), all.x = TRUE)
 
+tmp <- full_data_by_team %>% filter(team_id == 1610612755)
 write.csv(full_data_by_team,"data/full_data_by_team.csv", row.names = FALSE)

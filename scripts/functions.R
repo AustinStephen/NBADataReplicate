@@ -12,7 +12,6 @@ running_total <- function(vector){
 }
 
 
-
 # marco_joins() -----------------------------------------------------------
 # Joins with game outcome and team information
 
@@ -98,7 +97,7 @@ aggregate_player <- function(dataframe){
 # returns the aggregated version of that dataframe.
 
 aggregateTeam <- function(year){
-game_logs(
+dataframe <- game_logs(
     seasons = c(year),
     result_types = "team") %>% 
     select(idGame,idTeam,plusminusTeam,ptsTeam,pctFG3Team,
@@ -111,6 +110,14 @@ game_logs(
       team_id = idTeam,
       # Other
       game = row_number(),
+      Season = case_when(
+        game_id > 21800000 ~ 2018,
+        game_id > 21700000 ~ 2017,
+        game_id > 21600000 ~ 2016,
+        game_id > 21500000 ~ 2015,
+        game_id > 21400000 ~ 2014,
+        game_id > 21300000 ~ 2013
+      ),
       ## Team stats
       agg_plusminusTeam = running_total(plusminusTeam)/game, # /game scales the sum
       agg_ptsTeam = running_total(ptsTeam)/game,
@@ -136,13 +143,20 @@ game_logs(
         game < 60 ~ 3,
         TRUE ~ 4
       ),
-      # count wins
+      # win
       win = case_when(plusminusTeam > 0 ~ 1,
                       plusminusTeam <= 0  ~ 0 ),
+      # number of  wins
+      winsSeason = running_total(win),
+      finalWins = max(winsSeason),
+      
       # compute prior win ratio
       WL_ratio = case_when( game > 1 ~ (cumsum(win)-win) / game,
-                              TRUE ~ 0)
+                            TRUE ~ 0),
+      
+      
     ) %>%
     filter(!is.na(agg_plusminusTeam))
+
 }
 
