@@ -6,10 +6,9 @@
 #   
 #          Why not just use the data as it comes? 
 #           - The features created by the aggregate functions summarize a teams 
-#             performance up to that point in
-#             the season while leaving out the observation game. The nba data
-#             only comes on a per game basis, not very useful for predicting the
-#             outcome of that game.
+#             performance up to that point in the season while leaving out the 
+#             observation game. The nba data only comes on a per game basis, not
+#             very useful for predicting the outcome of that game.
 
 # get functions macro_joins(), aggregate_player(),aggregate_team()
 source("scripts/functions.R")
@@ -52,7 +51,7 @@ full_data_by_player <- rbind(mod_p14,mod_p15,mod_p16,mod_p17,mod_p18,mod_p19)
 
 tmp3 <- full_data_by_player %>% select(player_id, team_id, game_id, agg_ptsTeam:agg_pfTeam)
 
-write.csv(full_data_by_player,"data/full_data_by_player.csv",row.names = FALSE)
+# write.csv(full_data_by_player,"data/full_data_by_player.csv",row.names = FALSE)
 
 
 # Building team dataset ---------------------------------------------------------------
@@ -95,6 +94,8 @@ full_data_by_team <- ungroup(full_data_by_team)
 team_home <- full_data_by_team %>% filter(locationGame == 'H' )
 team_away <- full_data_by_team %>% filter(locationGame == 'A' )
 colnames(team_away) <- paste("opp", colnames(team_away), sep = "_")
+
+# full team joins
 full_data_by_team <- merge(x = team_home,
               y = team_away,
               by.x = "game_id",
@@ -103,11 +104,15 @@ full_data_by_team <- merge(x = team_home,
   mutate(WL_diff = WL_ratio - opp_WL_ratio,
          rest_diff = daysRest - opp_daysRest,
          wins_diff = winsSeason - opp_winsSeason)%>%
+  # remove redundant columns 
   select(-c(WL_ratio, opp_WL_ratio, daysRest, opp_daysRest, opp_segSeason,
             opp_locationGame, opp_win, opp_game, opp_plusminusTeam, opp_team_id,
-            locationGame, finalWins))%>%
+            locationGame, finalWins, opp_finalWins, opp_Season))%>%
+  # map table of prior season wins the season and team
   merge(priorWins, 
-        by = c("Season", "team_id"), all.x = TRUE)
+        by = c("Season", "team_id"), all.x = TRUE) %>%
+  # remove duplicate columns created on the join
+  select(-c(idTeam.x, idTeam.y))
 
 tmp <- full_data_by_team %>% filter(team_id == 1610612755)
 write.csv(full_data_by_team,"data/full_data_by_team.csv", row.names = FALSE)
